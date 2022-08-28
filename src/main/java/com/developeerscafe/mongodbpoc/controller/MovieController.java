@@ -2,6 +2,9 @@ package com.developeerscafe.mongodbpoc.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,6 +49,15 @@ public class MovieController {
 		
 		return new ResponseEntity<List<Movie>>(movieService.getMovieByPopularity(minPopularity, maxPopularity),
 				HttpStatus.FOUND);
+	}
+	
+	@GetMapping("/getMovies")
+	public Page<Movie> getMovies(
+			@RequestParam(required = false) String name, 
+			@RequestParam(defaultValue = "0") Integer page,
+			@RequestParam(defaultValue = "5") Integer size) {
+		Pageable pageable = PageRequest.of(page, size);
+		return movieService.getMovies(name, pageable);
 	}
 
 }
